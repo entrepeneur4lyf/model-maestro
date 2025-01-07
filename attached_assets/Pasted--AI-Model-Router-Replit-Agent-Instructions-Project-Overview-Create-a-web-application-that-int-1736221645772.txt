@@ -1,0 +1,305 @@
+# AI Model Router - Replit Agent Instructions
+
+## Project Overview
+Create a web application that intelligently routes prompts to the most appropriate AI model based on content analysis, task type, and historical performance.
+
+## Core Requirements
+
+### 1. Project Setup
+```bash
+# Initialize Next.js project with TypeScript
+npx create-next-app@latest ai-model-router --typescript --tailwind --eslint
+
+# Required dependencies
+npm install @radix-ui/react-slot
+npm install lucide-react
+npm install @radix-ui/react-dialog
+npm install class-variance-authority
+npm install clsx
+npm install tailwind-merge
+npm install natural    # For NLP capabilities
+npm install marked     # For markdown processing
+npm install zod       # For type validation
+```
+
+### 2. Project Structure
+```
+ai-model-router/
+├── src/
+│   ├── components/
+│   │   ├── ui/         # shadcn/ui components
+│   │   ├── model-router/
+│   │   │   ├── prompt-analyzer.tsx
+│   │   │   ├── confidence-meter.tsx
+│   │   │   ├── model-comparison.tsx
+│   │   │   └── history-tracker.tsx
+│   ├── lib/
+│   │   ├── types.ts
+│   │   ├── constants.ts
+│   │   ├── analyze-prompt.ts
+│   │   └── model-profiles.ts
+│   ├── hooks/
+│   │   ├── use-prompt-analysis.ts
+│   │   └── use-model-selection.ts
+│   └── pages/
+│       ├── api/
+│       │   └── analyze.ts
+│       └── index.tsx
+```
+
+### 3. Core Features
+
+#### 3.1 Prompt Analysis System
+Implement sophisticated prompt analysis using natural language processing:
+
+```typescript
+// src/lib/analyze-prompt.ts
+
+import natural from 'natural';
+import { PromptAnalysis, ModelProfile, TaskType } from './types';
+
+const tokenizer = new natural.WordTokenizer();
+const tfidf = new natural.TfIdf();
+
+export function analyzePrompt(prompt: string): PromptAnalysis {
+  // Tokenization
+  const tokens = tokenizer.tokenize(prompt);
+  
+  // Task classification
+  const taskType = classifyTask(tokens);
+  
+  // Complexity analysis
+  const complexity = analyzeComplexity(prompt, tokens);
+  
+  // Context requirements
+  const contextNeeded = estimateContextRequirement(tokens);
+  
+  return {
+    taskType,
+    complexity,
+    contextNeeded,
+    tokens: tokens.length,
+    specialRequirements: detectSpecialRequirements(prompt)
+  };
+}
+```
+
+#### 3.2 Model Profiles
+Define detailed model characteristics:
+
+```typescript
+// src/lib/model-profiles.ts
+
+export const modelProfiles: Record<string, ModelProfile> = {
+  'claude-3-opus': {
+    strengths: ['long-form writing', 'complex analysis', 'research', 'creative writing'],
+    contextWindow: 200000,
+    specialties: ['academic writing', 'code analysis', 'technical documentation'],
+    costPerToken: 0.015,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.95,
+    bestFor: ['research', 'analysis', 'long-form content']
+  },
+  'gemini-pro': {
+    strengths: ['code generation', 'technical tasks', 'mathematical analysis'],
+    contextWindow: 32000,
+    specialties: ['coding', 'math', 'data analysis'],
+    costPerToken: 0.012,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.92,
+    bestFor: ['coding', 'quick responses', 'technical tasks']
+  },
+  'claude-3-sonnet': {
+    strengths: ['balanced performance', 'concise responses', 'general knowledge'],
+    contextWindow: 100000,
+    specialties: ['general tasks', 'balanced performance'],
+    costPerToken: 0.008,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.93,
+    bestFor: ['general queries', 'balanced tasks']
+  }
+};
+```
+
+#### 3.3 Performance Tracking
+Implement a system to track and learn from past performance:
+
+```typescript
+// src/lib/performance-tracker.ts
+
+interface PerformanceRecord {
+  modelId: string;
+  promptType: TaskType;
+  executionTime: number;
+  tokenCount: number;
+  userRating?: number;
+  success: boolean;
+}
+
+class PerformanceTracker {
+  private records: PerformanceRecord[] = [];
+  
+  addRecord(record: PerformanceRecord) {
+    this.records.push(record);
+    this.updateModelScores();
+  }
+  
+  getModelPerformance(modelId: string, taskType: TaskType) {
+    return this.records
+      .filter(r => r.modelId === modelId && r.promptType === taskType)
+      .reduce((acc, curr) => ({
+        avgExecutionTime: acc.avgExecutionTime + curr.executionTime,
+        successRate: acc.successRate + (curr.success ? 1 : 0),
+        averageRating: acc.averageRating + (curr.userRating || 0)
+      }), { avgExecutionTime: 0, successRate: 0, averageRating: 0 });
+  }
+}
+```
+
+### 4. UI Components
+
+#### 4.1 Main Router Component
+```typescript
+// src/components/model-router/ModelRouter.tsx
+
+import React from 'react';
+import { analyzePrompt } from '@/lib/analyze-prompt';
+import { modelProfiles } from '@/lib/model-profiles';
+import { ConfidenceMeter } from './confidence-meter';
+import { ModelComparison } from './model-comparison';
+
+export const ModelRouter: React.FC = () => {
+  // Implementation as shown in previous artifact
+  // Enhanced with performance tracking and user feedback
+};
+```
+
+### 5. API Routes
+
+#### 5.1 Analysis Endpoint
+```typescript
+// src/pages/api/analyze.ts
+
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { analyzePrompt } from '@/lib/analyze-prompt';
+import { performanceTracker } from '@/lib/performance-tracker';
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { prompt } = req.body;
+  
+  try {
+    const analysis = analyzePrompt(prompt);
+    const recommendation = await getModelRecommendation(analysis);
+    
+    return res.status(200).json({
+      analysis,
+      recommendation,
+      confidence: calculateConfidence(analysis, recommendation)
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error analyzing prompt' });
+  }
+}
+```
+
+### 6. Deployment Instructions
+
+1. Configure environment variables:
+```env
+NEXT_PUBLIC_API_URL=your-api-url
+NEXT_PUBLIC_ENABLE_ANALYTICS=true
+PERFORMANCE_TRACKING_ENABLED=true
+```
+
+2. Set up monitoring:
+```typescript
+// src/lib/monitoring.ts
+
+export const monitor = {
+  trackAnalysis: (prompt: string, result: AnalysisResult) => {
+    // Implement monitoring logic
+  },
+  trackError: (error: Error) => {
+    // Error tracking
+  },
+  trackPerformance: (metrics: PerformanceMetrics) => {
+    // Performance monitoring
+  }
+};
+```
+
+3. Deploy with Replit:
+- Enable Node.js in project settings
+- Configure build command: `npm run build`
+- Set start command: `npm start`
+- Enable HTTPS
+- Configure custom domain (optional)
+
+### 7. Testing Requirements
+
+1. Unit Tests:
+```typescript
+// src/lib/__tests__/analyze-prompt.test.ts
+
+describe('Prompt Analysis', () => {
+  test('correctly identifies code-related prompts', () => {
+    const prompt = 'Write a function to sort an array in JavaScript';
+    const analysis = analyzePrompt(prompt);
+    expect(analysis.taskType).toBe('coding');
+  });
+  
+  // Add more test cases
+});
+```
+
+2. Integration Tests:
+```typescript
+// src/__tests__/api.test.ts
+
+describe('API Routes', () => {
+  test('returns correct model recommendation', async () => {
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      body: JSON.stringify({ prompt: 'Test prompt' })
+    });
+    
+    expect(response.status).toBe(200);
+    // Add more assertions
+  });
+});
+```
+
+### 8. Future Improvements
+
+1. Implement machine learning model for classification
+2. Add A/B testing capability
+3. Integrate cost optimization
+4. Add support for more models
+5. Implement batch processing
+6. Add real-time performance monitoring
+7. Implement user feedback system
+8. Add custom model configurations
+
+### 9. Maintenance Instructions
+
+1. Regular tasks:
+- Monitor error rates
+- Update model profiles
+- Review performance metrics
+- Update NLP models
+- Backup performance data
+
+2. Update procedures:
+- Document all changes
+- Test in staging
+- Deploy during low-traffic periods
+- Monitor post-deployment metrics
+
+Note: This implementation uses TypeScript for better type safety and maintainability. The Replit agent should maintain strict typing throughout the project.
