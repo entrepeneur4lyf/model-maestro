@@ -7,6 +7,7 @@ import { CheckCircle2, Star } from 'lucide-react';
 import { ScoreBreakdownTooltip } from './ScoreBreakdownTooltip';
 import type { ModelPreferences } from './ModelPreferences';
 import { motion, AnimatePresence } from 'framer-motion';
+import { triggerHaptic } from '@/lib/utils';
 
 interface Props {
   selectedModel: ModelProfile;
@@ -72,6 +73,10 @@ export function ModelComparison({
     return acc;
   }, {} as Record<Provider, ModelProfile[]>);
 
+  const handleModelInteraction = () => {
+    triggerHaptic('selection');
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -85,6 +90,7 @@ export function ModelComparison({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
+            onTouchStart={handleModelInteraction}
           >
             <h3 className="text-lg font-semibold">Recommended Model</h3>
             <motion.div 

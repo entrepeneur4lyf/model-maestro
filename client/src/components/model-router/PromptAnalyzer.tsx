@@ -7,6 +7,7 @@ import type { PromptAnalysis } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { triggerHaptic } from '@/lib/utils';
 
 interface Props {
   onAnalysis: (analysis: PromptAnalysis) => void;
@@ -32,12 +33,20 @@ export function PromptAnalyzer({ onAnalysis }: Props) {
       const currentY = e.touches[0].clientY;
       const distance = Math.max(0, Math.min(currentY - touchStart, maxPullDistance));
       setPullDistance(distance);
+
+      // Provide light haptic feedback at 50% and 100% of pull distance
+      if (distance >= maxPullDistance * 0.5 && distance < maxPullDistance * 0.51) {
+        triggerHaptic('light');
+      } else if (distance >= maxPullDistance * 0.95) {
+        triggerHaptic('medium');
+      }
     }
   };
 
   const handleTouchEnd = () => {
     if (pullDistance >= maxPullDistance) {
       setPrompt('');
+      triggerHaptic('success');
       toast({
         title: 'Prompt Cleared',
         description: 'You can now enter a new prompt.',
@@ -48,12 +57,14 @@ export function PromptAnalyzer({ onAnalysis }: Props) {
   };
 
   const handleAnalyze = async () => {
+    triggerHaptic('selection');
     setLoading(true);
     try {
       console.log('Analyzing prompt:', prompt);
       const analysis = await analyzePrompt(prompt);
       console.log('Analysis result:', analysis);
 
+      triggerHaptic('success');
       onAnalysis(analysis);
       toast({
         title: 'Analysis Complete',
@@ -61,6 +72,7 @@ export function PromptAnalyzer({ onAnalysis }: Props) {
       });
     } catch (error) {
       console.error('Analysis failed:', error);
+      triggerHaptic('error');
       toast({
         title: 'Analysis Failed',
         description: error instanceof Error ? error.message : 'Failed to analyze prompt',
