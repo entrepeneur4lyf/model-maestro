@@ -39,7 +39,7 @@ export const modelProfiles: Record<string, ModelProfile> = {
       'applications requiring quick responses'
     ],
     costPerToken: 0.00015,
-    averageSpeed: 'very fast',
+    averageSpeed: 'fast', 
     reliabilityScore: 0.94,
     bestFor: ['real-time applications', 'cost-sensitive tasks', 'customer interactions']
   },
@@ -60,9 +60,30 @@ export const modelProfiles: Record<string, ModelProfile> = {
       'strategic planning'
     ],
     costPerToken: 0.003,
-    averageSpeed: 'moderate',
+    averageSpeed: 'medium', 
     reliabilityScore: 0.98,
     bestFor: ['complex problem-solving', 'scientific and technical tasks', 'strategic analysis']
+  },
+  'claude-3-5-sonnet': {
+    id: 'claude-3-5-sonnet',
+    name: 'Claude 3.5 Sonnet',
+    strengths: [
+      'advanced coding',
+      'complex reasoning',
+      'multilingual support',
+      'vision capabilities'
+    ],
+    contextWindow: 200000,
+    specialties: [
+      'code generation',
+      'multistep workflows',
+      'chart interpretation',
+      'text extraction from images'
+    ],
+    costPerToken: 0.003,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.97,
+    bestFor: ['coding tasks', 'complex problem-solving', 'multilingual applications']
   },
   'claude-3-opus': {
     id: 'claude-3-opus',
@@ -334,7 +355,7 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): {
       score, 
       factors,
       breakdown,
-      confidence: 0 // Will be calculated after all scores are computed
+      confidence: 0 
     };
   });
 
