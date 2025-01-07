@@ -42,70 +42,99 @@ interface ModelScore {
   score: number;
   confidence: number;
   factors: string[];
+  breakdown: {
+    taskMatch: number;
+    contextScore: number;
+    speedBonus: number;
+    costScore: number;
+    reliabilityScore: number;
+    specialtyMatch: number;
+  };
 }
 
-export function findBestModel(analysis: any, preferences: ModelPreferences): { modelId: string; confidence: number; factors: string[] } {
+export function findBestModel(analysis: any, preferences: ModelPreferences): { 
+  modelId: string; 
+  confidence: number; 
+  factors: string[];
+  scoreBreakdown: ModelScore['breakdown'];
+} {
   console.log('Running model selection with preferences:', preferences);
 
   const scores: ModelScore[] = Object.entries(modelProfiles).map(([id, profile]) => {
-    let score = 0;
+    const breakdown = {
+      taskMatch: 0,
+      contextScore: 0,
+      speedBonus: 0,
+      costScore: 0,
+      reliabilityScore: 0,
+      specialtyMatch: 0
+    };
     const factors: string[] = [];
 
     // Task type matching
     if (profile.specialties.includes(analysis.taskType)) {
-      score += 2;
+      breakdown.taskMatch = 2;
       factors.push(`Specialized in ${analysis.taskType}`);
     }
 
     // Context window requirements with user preference
     const requiredTokens = analysis.tokens * 2;
     if (profile.contextWindow >= requiredTokens) {
-      const contextScore = preferences.contextWindowImportance / 100;
-      score += contextScore;
+      breakdown.contextScore = preferences.contextWindowImportance / 100;
       factors.push(`Sufficient context window (${profile.contextWindow.toLocaleString()} tokens)`);
     }
 
     // Speed preference
     if (preferences.prioritizeSpeed && profile.averageSpeed === 'fast') {
-      score += 2;
+      breakdown.speedBonus = 2;
       factors.push('Fast response time');
     }
 
     // Cost sensitivity
-    const costScore = (1 - profile.costPerToken / 0.015) * (preferences.costSensitivity / 100);
-    score += costScore;
-    if (costScore > 0.5) {
+    breakdown.costScore = (1 - profile.costPerToken / 0.015) * (preferences.costSensitivity / 100);
+    if (breakdown.costScore > 0.5) {
       factors.push('Cost-effective option');
     }
 
     // Reliability threshold
     if (profile.reliabilityScore * 100 >= preferences.reliabilityThreshold) {
-      const reliabilityScore = profile.reliabilityScore * (preferences.reliabilityThreshold / 100);
-      score += reliabilityScore;
+      breakdown.reliabilityScore = profile.reliabilityScore * (preferences.reliabilityThreshold / 100);
       factors.push(`High reliability (${(profile.reliabilityScore * 100).toFixed(1)}%)`);
     }
 
     // Special requirements matching
-    const matchingSpecialties = analysis.specialRequirements
+    breakdown.specialtyMatch = analysis.specialRequirements
       .filter((req: string) => profile.specialties.includes(req)).length;
-    if (matchingSpecialties > 0) {
-      score += matchingSpecialties;
-      factors.push(`Matches ${matchingSpecialties} special requirements`);
+    if (breakdown.specialtyMatch > 0) {
+      factors.push(`Matches ${breakdown.specialtyMatch} special requirements`);
     }
 
+    const score = Object.values(breakdown).reduce((a, b) => a + b, 0);
+
     console.log(`Model ${profile.name} score breakdown:`, {
+      ...breakdown,
       totalScore: score,
-      factors,
-      speedBonus: preferences.prioritizeSpeed && profile.averageSpeed === 'fast' ? 2 : 0,
-      costScore: costScore,
-      specialtyMatch: matchingSpecialties
+      factors
     });
 
-    // Calculate confidence based on total possible score
-    const maxPossibleScore = 7; 
-    const confidence = Math.min(score / maxPossibleScore, 1);
+    return { 
+      id, 
+      score, 
+      factors,
+      breakdown,
+      confidence: 0 // Will be calculated after all scores are computed
+    };
+  });
 
-    return { id, score, confidence, factors };
+  // Calculate confidence based on relative score differences
+  const maxScore = Math.max(...scores.map(s => s.score));
+  const minScore = Math.min(...scores.map(s => s.score));
+  const scoreRange = maxScore - minScore;
+
+  scores.forEach(score => {
+    score.confidence = scoreRange > 0 
+      ? (score.score - minScore) / scoreRange 
+      : 1;
   });
 
   const bestModel = scores.sort((a, b) => b.score - a.score)[0];
@@ -114,6 +143,7 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): { m
   return {
     modelId: bestModel.id,
     confidence: bestModel.confidence,
-    factors: bestModel.factors
+    factors: bestModel.factors,
+    scoreBreakdown: bestModel.breakdown
   };
 }

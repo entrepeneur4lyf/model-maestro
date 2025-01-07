@@ -17,6 +17,7 @@ export function ModelRouter() {
   const [selectedModel, setSelectedModel] = React.useState<ModelProfile | null>(null);
   const [confidence, setConfidence] = React.useState(0);
   const [selectionFactors, setSelectionFactors] = React.useState<string[]>([]);
+  const [scoreBreakdown, setScoreBreakdown] = React.useState<any>(null);
   const [preferences, setPreferences] = React.useState<ModelPreferencesType>({
     prioritizeSpeed: false,
     costSensitivity: 50,
@@ -35,7 +36,7 @@ export function ModelRouter() {
     setAnalysis(newAnalysis);
 
     try {
-      const { modelId, confidence: modelConfidence, factors } = findBestModel(newAnalysis, preferences);
+      const { modelId, confidence: modelConfidence, factors, scoreBreakdown: breakdown } = findBestModel(newAnalysis, preferences);
       const model = modelProfiles[modelId];
 
       if (!model) {
@@ -45,6 +46,7 @@ export function ModelRouter() {
       setSelectedModel(model);
       setConfidence(modelConfidence);
       setSelectionFactors(factors);
+      setScoreBreakdown(breakdown);
 
       toast({
         title: 'Analysis Complete',
@@ -115,6 +117,7 @@ export function ModelRouter() {
             alternativeModels={alternativeModels}
             confidence={confidence}
             selectionFactors={selectionFactors}
+            scoreBreakdown={scoreBreakdown}
           />
         </>
       )}

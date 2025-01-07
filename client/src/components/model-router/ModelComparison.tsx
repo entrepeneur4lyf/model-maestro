@@ -3,21 +3,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConfidenceMeter } from './ConfidenceMeter';
 import { ModelProfile } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Props {
   selectedModel: ModelProfile;
   alternativeModels: ModelProfile[];
   confidence: number;
   selectionFactors: string[];
+  scoreBreakdown?: {
+    taskMatch: number;
+    contextScore: number;
+    speedBonus: number;
+    costScore: number;
+    reliabilityScore: number;
+    specialtyMatch: number;
+  };
 }
 
 export function ModelComparison({ 
   selectedModel, 
   alternativeModels,
   confidence,
-  selectionFactors
+  selectionFactors,
+  scoreBreakdown
 }: Props) {
+  const [showBreakdown, setShowBreakdown] = React.useState(false);
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -40,6 +51,71 @@ export function ModelComparison({
             />
 
             <div className="mt-4 space-y-4">
+              <div>
+                <button
+                  onClick={() => setShowBreakdown(!showBreakdown)}
+                  className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Selection Score Breakdown
+                  {showBreakdown ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </button>
+
+                {showBreakdown && scoreBreakdown && (
+                  <div className="mt-2 space-y-1 text-sm">
+                    {scoreBreakdown.taskMatch > 0 && (
+                      <div className="flex justify-between">
+                        <span>Task Match:</span>
+                        <span>+{scoreBreakdown.taskMatch.toFixed(1)}</span>
+                      </div>
+                    )}
+                    {scoreBreakdown.contextScore > 0 && (
+                      <div className="flex justify-between">
+                        <span>Context Window:</span>
+                        <span>+{scoreBreakdown.contextScore.toFixed(1)}</span>
+                      </div>
+                    )}
+                    {scoreBreakdown.speedBonus > 0 && (
+                      <div className="flex justify-between">
+                        <span>Speed Bonus:</span>
+                        <span>+{scoreBreakdown.speedBonus.toFixed(1)}</span>
+                      </div>
+                    )}
+                    {scoreBreakdown.costScore > 0 && (
+                      <div className="flex justify-between">
+                        <span>Cost Efficiency:</span>
+                        <span>+{scoreBreakdown.costScore.toFixed(1)}</span>
+                      </div>
+                    )}
+                    {scoreBreakdown.reliabilityScore > 0 && (
+                      <div className="flex justify-between">
+                        <span>Reliability:</span>
+                        <span>+{scoreBreakdown.reliabilityScore.toFixed(1)}</span>
+                      </div>
+                    )}
+                    {scoreBreakdown.specialtyMatch > 0 && (
+                      <div className="flex justify-between">
+                        <span>Special Requirements:</span>
+                        <span>+{scoreBreakdown.specialtyMatch.toFixed(1)}</span>
+                      </div>
+                    )}
+                    <div className="border-t pt-1 mt-1 font-medium">
+                      <div className="flex justify-between">
+                        <span>Total Score:</span>
+                        <span>
+                          {Object.values(scoreBreakdown)
+                            .reduce((a, b) => a + b, 0)
+                            .toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div>
                 <h5 className="text-sm font-medium mb-2">Selection Factors:</h5>
                 <div className="space-y-2">
