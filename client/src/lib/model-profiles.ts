@@ -46,26 +46,26 @@ export const modelProfiles: Record<string, ModelProfile> = {
     reliabilityScore: 0.94,
     bestFor: ['coding', 'creative tasks', 'general queries']
   },
-  'gemini-pro': {
-    id: 'gemini-pro',
-    name: 'Gemini Pro',
+  'llama-3-405b': {
+    id: 'llama-3-405b',
+    name: 'Llama 3 405B',
     strengths: [
-      'code generation',
-      'technical tasks',
-      'mathematical analysis',
-      'fast responses'
+      'open-source',
+      'large-scale tasks',
+      'customization',
+      'research'
     ],
-    contextWindow: 32000,
+    contextWindow: 64000,
     specialties: [
-      'coding',
-      'math',
+      'text generation',
+      'research',
       'data analysis',
-      'quick responses'
+      'custom model training'
     ],
-    costPerToken: 0.012,
-    averageSpeed: 'fast',
-    reliabilityScore: 0.92,
-    bestFor: ['coding', 'quick responses', 'technical tasks']
+    costPerToken: 0.005,
+    averageSpeed: 'slow',
+    reliabilityScore: 0.90,
+    bestFor: ['custom solutions', 'research', 'data analysis']
   },
   'claude-3-sonnet': {
     id: 'claude-3-sonnet',
@@ -87,6 +87,69 @@ export const modelProfiles: Record<string, ModelProfile> = {
     averageSpeed: 'fast',
     reliabilityScore: 0.93,
     bestFor: ['general queries', 'balanced tasks', 'quick responses']
+  },
+  'nova-pro': {
+    id: 'nova-pro',
+    name: 'Nova Pro',
+    strengths: [
+      'multimodal processing',
+      'complex reasoning',
+      'data integration',
+      'AWS integration'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'complex reasoning',
+      'data integration',
+      'multimodal processing',
+      'AWS services'
+    ],
+    costPerToken: 0.013,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.91,
+    bestFor: ['AWS deployments', 'complex tasks', 'data-driven applications']
+  },
+  'phi': {
+    id: 'phi',
+    name: 'Phi',
+    strengths: [
+      'efficiency',
+      'integration',
+      'conversational AI',
+      'cost-effective'
+    ],
+    contextWindow: 16000,
+    specialties: [
+      'text generation',
+      'summarization',
+      'conversational AI',
+      'Microsoft ecosystem'
+    ],
+    costPerToken: 0.007,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.89,
+    bestFor: ['Microsoft integrations', 'chatbots', 'summarization']
+  },
+  'gemini-pro': {
+    id: 'gemini-pro',
+    name: 'Gemini Pro',
+    strengths: [
+      'code generation',
+      'technical tasks',
+      'mathematical analysis',
+      'fast responses'
+    ],
+    contextWindow: 32000,
+    specialties: [
+      'coding',
+      'math',
+      'data analysis',
+      'quick responses'
+    ],
+    costPerToken: 0.012,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.92,
+    bestFor: ['coding', 'quick responses', 'technical tasks']
   },
   'gpt-3.5-turbo': {
     id: 'gpt-3.5-turbo',

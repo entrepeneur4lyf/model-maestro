@@ -1,0 +1,154 @@
+import { ModelProfile } from './types';
+
+export const modelProfiles: Record<string, ModelProfile> = {
+  'claude-3-opus': {
+    id: 'claude-3-opus',
+    name: 'Claude 3 Opus',
+    strengths: [
+      'long-form writing',
+      'complex analysis',
+      'research',
+      'code understanding',
+      'technical writing'
+    ],
+    contextWindow: 200000,
+    specialties: [
+      'academic writing',
+      'code analysis',
+      'technical documentation',
+      'scientific research',
+      'data analysis'
+    ],
+    costPerToken: 0.015,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.95,
+    bestFor: ['research', 'analysis', 'long-form content']
+  },
+  'gpt-4o': {
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    strengths: [
+      'multimodal processing',
+      'creative writing',
+      'problem-solving',
+      'versatile tasks'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'programming',
+      'creative writing',
+      'problem-solving',
+      'general knowledge',
+      'image and audio processing'
+    ],
+    costPerToken: 0.012,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.94,
+    bestFor: ['coding', 'creative tasks', 'general queries', 'multimodal tasks']
+  },
+  'gemini-ultra': {
+    id: 'gemini-ultra',
+    name: 'Gemini Ultra',
+    strengths: [
+      'code generation',
+      'technical tasks',
+      'mathematical analysis',
+      'fast responses'
+    ],
+    contextWindow: 32000,
+    specialties: [
+      'coding',
+      'mathematics',
+      'data analysis',
+      'quick responses'
+    ],
+    costPerToken: 0.014,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.92,
+    bestFor: ['coding', 'quick responses', 'technical tasks']
+  },
+  'claude-3-sonnet': {
+    id: 'claude-3-sonnet',
+    name: 'Claude 3 Sonnet',
+    strengths: [
+      'balanced performance',
+      'concise responses',
+      'general knowledge',
+      'fast processing'
+    ],
+    contextWindow: 100000,
+    specialties: [
+      'general tasks',
+      'balanced performance',
+      'quick iterations',
+      'everyday queries'
+    ],
+    costPerToken: 0.008,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.93,
+    bestFor: ['general queries', 'balanced tasks', 'quick responses']
+  },
+  'llama-3-405b': {
+    id: 'llama-3-405b',
+    name: 'Llama 3 405B',
+    strengths: [
+      'open-source',
+      'large-scale tasks',
+      'customization',
+      'research'
+    ],
+    contextWindow: 64000,
+    specialties: [
+      'text generation',
+      'research',
+      'data analysis',
+      'custom model training'
+    ],
+    costPerToken: 0.005,
+    averageSpeed: 'slow',
+    reliabilityScore: 0.90,
+    bestFor: ['custom solutions', 'research', 'data analysis']
+  },
+  'nova-pro': {
+    id: 'nova-pro',
+    name: 'Nova Pro',
+    strengths: [
+      'multimodal processing',
+      'complex reasoning',
+      'data integration',
+      'AWS integration'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'complex reasoning',
+      'data integration',
+      'multimodal processing',
+      'AWS services'
+    ],
+    costPerToken: 0.013,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.91,
+    bestFor: ['AWS deployments', 'complex tasks', 'data-driven applications']
+  },
+  'phi': {
+    id: 'phi',
+    name: 'Phi',
+    strengths: [
+      'efficiency',
+      'integration',
+      'conversational AI',
+      'cost-effective'
+    ],
+    contextWindow: 16000,
+    specialties: [
+      'text generation',
+      'summarization',
+      'conversational AI',
+      'Microsoft ecosystem'
+    ],
+    costPerToken: 0.007,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.89,
+    bestFor: ['Microsoft integrations', 'chatbots', 'summarization']
+  }
+};
