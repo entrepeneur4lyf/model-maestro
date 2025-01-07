@@ -25,7 +25,32 @@ export function HistoryTracker({ history }: Props) {
         <ScrollArea className="h-[300px] w-full pr-4">
           <div className="space-y-4">
             {history.map((entry) => {
-              const model = profiles.find(p => p.id === entry.modelId);
+              // Handle null modelId case
+              if (entry.modelId === null) {
+                return (
+                  <div
+                    key={entry.id}
+                    className="flex items-center justify-between p-4 rounded-lg bg-secondary/5"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Analysis Request</span>
+                        <Badge variant={entry.success ? "outline" : "destructive"}>
+                          {entry.success ? "Success" : "Failed"}
+                        </Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {entry.promptType} - {entry.executionTime}ms
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(entry.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                );
+              }
+
+              const model = profiles.find((p: { id: number }) => p.id === entry.modelId);
               return (
                 <div
                   key={entry.id}
@@ -34,7 +59,7 @@ export function HistoryTracker({ history }: Props) {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-medium">
-                        {model ? model.name : 'Model ' + entry.modelId}
+                        {model ? model.name : `Model ${entry.modelId}`}
                       </span>
                       <Badge variant={entry.success ? "outline" : "destructive"}>
                         {entry.success ? "Success" : "Failed"}
