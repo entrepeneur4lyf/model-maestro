@@ -58,7 +58,12 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): {
   factors: string[];
   scoreBreakdown: ModelScore['breakdown'];
 } {
-  console.log('Running model selection with preferences:', preferences);
+  console.log('Running model selection with preferences:', {
+    ...preferences,
+    costSensitivityNormalized: preferences.costSensitivity / 100,
+    reliabilityThresholdNormalized: preferences.reliabilityThreshold / 100,
+    contextImportanceNormalized: preferences.contextWindowImportance / 100
+  });
 
   const scores: ModelScore[] = Object.entries(modelProfiles).map(([id, profile]) => {
     const breakdown = {
@@ -91,14 +96,16 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): {
     }
 
     // Cost sensitivity
-    breakdown.costScore = (1 - profile.costPerToken / 0.015) * (preferences.costSensitivity / 100);
+    const costNormalized = preferences.costSensitivity / 100;
+    breakdown.costScore = (1 - profile.costPerToken / 0.015) * costNormalized;
     if (breakdown.costScore > 0.5) {
-      factors.push('Cost-effective option');
+      factors.push(`Cost-effective (${(profile.costPerToken * 1000).toFixed(1)}¢ per 1k tokens)`);
     }
 
     // Reliability threshold
-    if (profile.reliabilityScore * 100 >= preferences.reliabilityThreshold) {
-      breakdown.reliabilityScore = profile.reliabilityScore * (preferences.reliabilityThreshold / 100);
+    const reliabilityThreshold = preferences.reliabilityThreshold / 100;
+    if (profile.reliabilityScore >= reliabilityThreshold) {
+      breakdown.reliabilityScore = profile.reliabilityScore * reliabilityThreshold;
       factors.push(`High reliability (${(profile.reliabilityScore * 100).toFixed(1)}%)`);
     }
 
@@ -114,7 +121,12 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): {
     console.log(`Model ${profile.name} score breakdown:`, {
       ...breakdown,
       totalScore: score,
-      factors
+      factors,
+      preferences: {
+        speedBonus: preferences.prioritizeSpeed ? 'Active (+2 for fast models)' : 'Inactive',
+        costMultiplier: `${costNormalized.toFixed(2)}x`,
+        reliabilityRequired: `${(reliabilityThreshold * 100).toFixed(0)}%`
+      }
     });
 
     return { 
