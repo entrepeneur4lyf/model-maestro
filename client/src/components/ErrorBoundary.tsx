@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 interface State {
@@ -11,17 +12,17 @@ interface State {
   error?: Error;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
   };
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
   }
 
   public render() {
@@ -34,7 +35,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               <h2 className="text-lg font-semibold">Something went wrong</h2>
             </div>
             <p className="text-sm text-muted-foreground">
-              {this.state.error?.message || 'An error occurred while rendering this component'}
+              {this.state.error?.message || 'An unexpected error occurred'}
             </p>
           </CardContent>
         </Card>

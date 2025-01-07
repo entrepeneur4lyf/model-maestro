@@ -8,7 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import type { PromptAnalysis, ModelProfile, PerformanceRecord } from '@/lib/types';
 import { findBestModel } from '@/lib/model-profiles';
 import { modelProfiles } from '@/lib/model-profiles';
-import { ErrorBoundary } from '../ErrorBoundary';
 import { Loader2 } from 'lucide-react';
 
 export function ModelRouter() {
@@ -75,24 +74,22 @@ export function ModelRouter() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <ErrorBoundary>
-        <Card className="p-6">
-          <h1 className="text-2xl font-bold mb-6">AI Model Router</h1>
-          <PromptAnalyzer onAnalysis={handleAnalysis} />
-        </Card>
+      <Card className="p-6">
+        <h1 className="text-2xl font-bold mb-6">AI Model Router</h1>
+        <PromptAnalyzer onAnalysis={handleAnalysis} />
+      </Card>
 
-        {selectedModel && analysis && (
-          <ModelComparison
-            selectedModel={selectedModel}
-            alternativeModels={alternativeModels}
-            confidence={0.8} // We'll implement dynamic confidence calculation later
-          />
-        )}
-
-        <HistoryTracker
-          history={history}
+      {selectedModel && analysis && (
+        <ModelComparison
+          selectedModel={selectedModel}
+          alternativeModels={alternativeModels}
+          confidence={0.8} // We'll implement dynamic confidence calculation later
         />
-      </ErrorBoundary>
+      )}
+
+      <HistoryTracker
+        history={history}
+      />
     </div>
   );
 }
