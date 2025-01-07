@@ -35,15 +35,15 @@ const providerColors: Record<Provider, string> = {
 function BenchmarkScore({ name, score }: { name: string; score: number }) {
   return (
     <motion.div 
-      className="flex items-center gap-1"
+      className="flex items-center gap-1 min-w-[140px]"
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Star className="h-4 w-4 text-yellow-500" />
-      <span className="text-sm font-medium">{name}:</span>
+      <Star className="h-4 w-4 flex-shrink-0 text-yellow-500" />
+      <span className="text-sm font-medium truncate">{name}:</span>
       <motion.span 
-        className="text-sm text-muted-foreground"
+        className="text-sm text-muted-foreground ml-auto"
         key={score}
         initial={{ scale: 1.2, color: '#10B981' }}
         animate={{ scale: 1, color: '#6B7280' }}
@@ -93,8 +93,8 @@ export function ModelComparison({
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <div className="flex flex-wrap items-center gap-2 mr-auto">
                   <h4 className="font-medium">{selectedModel.name}</h4>
                   <Badge
                     variant="secondary"
@@ -103,7 +103,7 @@ export function ModelComparison({
                     {selectedModel.provider}
                   </Badge>
                 </div>
-                <Badge variant="secondary">
+                <Badge variant="secondary" className="flex-shrink-0">
                   {selectedModel.averageSpeed} speed
                 </Badge>
               </div>
@@ -129,7 +129,7 @@ export function ModelComparison({
                 )}
 
                 {selectedModel.benchmarks && (
-                  <div className="mt-2 grid grid-cols-2 gap-2">
+                  <div className="mt-2 flex flex-wrap gap-3">
                     {Object.entries(selectedModel.benchmarks).map(([key, value]) => (
                       <BenchmarkScore
                         key={key}
@@ -150,13 +150,13 @@ export function ModelComparison({
                     {selectionFactors.map((factor, index) => (
                       <motion.div 
                         key={factor} 
-                        className="flex items-center gap-2 text-sm text-muted-foreground"
+                        className="flex items-center gap-2 text-sm text-muted-foreground break-words"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.1 * index }}
                       >
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        {factor}
+                        <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-500" />
+                        <span className="break-words">{factor}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -176,7 +176,7 @@ export function ModelComparison({
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.1 * index }}
                       >
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="whitespace-normal text-center">
                           {strength}
                         </Badge>
                       </motion.div>
@@ -212,8 +212,8 @@ export function ModelComparison({
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: 0.1 * index }}
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <div className="flex flex-wrap items-center gap-2 mr-auto">
                           <h4 className="font-medium">{model.name}</h4>
                           <Badge
                             variant="secondary"
@@ -222,12 +222,12 @@ export function ModelComparison({
                             {model.provider}
                           </Badge>
                         </div>
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="flex-shrink-0">
                           {model.averageSpeed} speed
                         </Badge>
                       </div>
                       <motion.div 
-                        className="text-sm text-muted-foreground"
+                        className="text-sm text-muted-foreground space-y-1"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
@@ -236,7 +236,7 @@ export function ModelComparison({
                         <p>Cost per token: ${model.costPerToken.toFixed(3)}</p>
                       </motion.div>
                       {model.benchmarks && (
-                        <div className="mt-2 grid grid-cols-2 gap-2">
+                        <div className="mt-3 flex flex-wrap gap-3">
                           {Object.entries(model.benchmarks).map(([key, value]) => (
                             <BenchmarkScore
                               key={key}
