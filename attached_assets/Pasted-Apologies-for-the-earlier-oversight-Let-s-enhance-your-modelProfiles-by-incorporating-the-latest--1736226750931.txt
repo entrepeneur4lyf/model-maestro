@@ -1,0 +1,92 @@
+Apologies for the earlier oversight. Let's enhance your `modelProfiles` by incorporating the latest OpenAI models: **GPT-4o**, **GPT-4o Mini**, and **GPT-o1**. Here's how you can update your `modelProfiles`:
+
+```typescript
+import { ModelProfile } from './types';
+
+export const modelProfiles: Record<string, ModelProfile> = {
+  // Existing models...
+
+  'gpt-4o': {
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    strengths: [
+      'multimodal processing',
+      'creative writing',
+      'problem-solving',
+      'versatile tasks'
+    ],
+    contextWindow: 128000, // 128K tokens
+    specialties: [
+      'text generation',
+      'image processing',
+      'audio processing',
+      'general knowledge'
+    ],
+    costPerToken: 0.0025, // $2.50 per million tokens
+    averageSpeed: 'fast',
+    reliabilityScore: 0.96,
+    bestFor: ['creative tasks', 'multimodal applications', 'general problem-solving']
+  },
+  'gpt-4o-mini': {
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    strengths: [
+      'cost-effective',
+      'low latency',
+      'real-time responses',
+      'multimodal processing'
+    ],
+    contextWindow: 128000, // 128K tokens
+    specialties: [
+      'text and vision inputs',
+      'customer support chatbots',
+      'applications requiring quick responses'
+    ],
+    costPerToken: 0.00015, // $0.15 per million input tokens
+    averageSpeed: 'very fast',
+    reliabilityScore: 0.94,
+    bestFor: ['real-time applications', 'cost-sensitive tasks', 'customer interactions']
+  },
+  'gpt-o1': {
+    id: 'gpt-o1',
+    name: 'GPT-o1',
+    strengths: [
+      'complex reasoning',
+      'problem-solving',
+      'scientific analysis',
+      'coding'
+    ],
+    contextWindow: 128000, // 128K tokens
+    specialties: [
+      'mathematics',
+      'scientific research',
+      'advanced coding tasks',
+      'strategic planning'
+    ],
+    costPerToken: 0.003, // $3 per million tokens
+    averageSpeed: 'moderate',
+    reliabilityScore: 0.98,
+    bestFor: ['complex problem-solving', 'scientific and technical tasks', 'strategic analysis']
+  }
+};
+```
+
+**Model Details:**
+
+- **GPT-4o**: A versatile, multimodal model capable of processing and generating text, images, and audio. It offers a large context window of 128K tokens, making it suitable for complex tasks requiring extensive context. Released in May 2024, it provides fast processing speeds and high reliability. 
+
+- **GPT-4o Mini**: A smaller, cost-efficient version of GPT-4o, designed for tasks requiring quick, real-time responses with lower computational demands. It retains a 128K token context window and is ideal for applications like customer support chatbots and tasks with budget constraints. Released in July 2024, it offers very fast response times and maintains high reliability. 
+
+- **GPT-o1**: Engineered for complex reasoning and problem-solving, GPT-o1 excels in areas such as mathematics, scientific research, and advanced coding. It utilizes a 128K token context window and is designed to spend more time reasoning through complex tasks before responding, enhancing its effectiveness in tackling challenging problems. Released in September 2024, it offers moderate speed with exceptional reliability. 
+
+**Considerations for Integration:**
+
+- **Task Alignment**: Match each model's strengths to your application's specific needs, such as creative writing, real-time customer interactions, or complex problem-solving.
+
+- **Deployment Constraints**: Ensure your infrastructure can accommodate the models' context window sizes and computational requirements.
+
+- **Licensing and Accessibility**: Review each model's licensing terms to ensure compliance with your application's use case.
+
+By updating your `modelProfiles` with these models, you enhance your application's ability to select the most appropriate AI model for a given task, leveraging the latest advancements in AI technology.
+
+ 

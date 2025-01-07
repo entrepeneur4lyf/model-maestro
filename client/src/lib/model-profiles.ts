@@ -2,6 +2,68 @@ import { ModelProfile } from './types';
 import type { ModelPreferences } from '@/components/model-router/ModelPreferences';
 
 export const modelProfiles: Record<string, ModelProfile> = {
+  'gpt-4o': {
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    strengths: [
+      'multimodal processing',
+      'creative writing',
+      'problem-solving',
+      'versatile tasks'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'text generation',
+      'image processing',
+      'audio processing',
+      'general knowledge'
+    ],
+    costPerToken: 0.0025,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.96,
+    bestFor: ['creative tasks', 'multimodal applications', 'general problem-solving']
+  },
+  'gpt-4o-mini': {
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    strengths: [
+      'cost-effective',
+      'low latency',
+      'real-time responses',
+      'multimodal processing'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'text and vision inputs',
+      'customer support chatbots',
+      'applications requiring quick responses'
+    ],
+    costPerToken: 0.00015,
+    averageSpeed: 'very fast',
+    reliabilityScore: 0.94,
+    bestFor: ['real-time applications', 'cost-sensitive tasks', 'customer interactions']
+  },
+  'gpt-o1': {
+    id: 'gpt-o1',
+    name: 'GPT-o1',
+    strengths: [
+      'complex reasoning',
+      'problem-solving',
+      'scientific analysis',
+      'coding'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'mathematics',
+      'scientific research',
+      'advanced coding tasks',
+      'strategic planning'
+    ],
+    costPerToken: 0.003,
+    averageSpeed: 'moderate',
+    reliabilityScore: 0.98,
+    bestFor: ['complex problem-solving', 'scientific and technical tasks', 'strategic analysis']
+  },
   'claude-3-opus': {
     id: 'claude-3-opus',
     name: 'Claude 3 Opus',
@@ -25,48 +87,6 @@ export const modelProfiles: Record<string, ModelProfile> = {
     reliabilityScore: 0.95,
     bestFor: ['research', 'analysis', 'long-form content']
   },
-  'gpt-4-turbo': {
-    id: 'gpt-4-turbo',
-    name: 'GPT-4 Turbo',
-    strengths: [
-      'creative writing',
-      'code generation',
-      'problem-solving',
-      'versatile tasks'
-    ],
-    contextWindow: 128000,
-    specialties: [
-      'programming',
-      'creative writing',
-      'problem-solving',
-      'general knowledge'
-    ],
-    costPerToken: 0.01,
-    averageSpeed: 'medium',
-    reliabilityScore: 0.94,
-    bestFor: ['coding', 'creative tasks', 'general queries']
-  },
-  'llama-3-405b': {
-    id: 'llama-3-405b',
-    name: 'Llama 3 405B',
-    strengths: [
-      'open-source',
-      'large-scale tasks',
-      'customization',
-      'research'
-    ],
-    contextWindow: 64000,
-    specialties: [
-      'text generation',
-      'research',
-      'data analysis',
-      'custom model training'
-    ],
-    costPerToken: 0.005,
-    averageSpeed: 'slow',
-    reliabilityScore: 0.90,
-    bestFor: ['custom solutions', 'research', 'data analysis']
-  },
   'claude-3-sonnet': {
     id: 'claude-3-sonnet',
     name: 'Claude 3 Sonnet',
@@ -87,6 +107,49 @@ export const modelProfiles: Record<string, ModelProfile> = {
     averageSpeed: 'fast',
     reliabilityScore: 0.93,
     bestFor: ['general queries', 'balanced tasks', 'quick responses']
+  },
+  'deepseek-coder-33b': {
+    id: 'deepseek-coder-33b',
+    name: 'DeepSeek-Coder-Base-33B',
+    strengths: [
+      'advanced code generation',
+      'multilingual programming support',
+      'bug detection',
+      'code optimization'
+    ],
+    contextWindow: 16000,
+    specialties: [
+      'complex coding tasks',
+      'multilingual code generation',
+      'code completion',
+      'bug detection',
+      'code optimization'
+    ],
+    costPerToken: 0.010,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.96,
+    bestFor: ['advanced coding tasks', 'multilingual programming', 'code optimization']
+  },
+  'gpt-4-turbo': {
+    id: 'gpt-4-turbo',
+    name: 'GPT-4 Turbo',
+    strengths: [
+      'creative writing',
+      'code generation',
+      'problem-solving',
+      'versatile tasks'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'programming',
+      'creative writing',
+      'problem-solving',
+      'general knowledge'
+    ],
+    costPerToken: 0.01,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.94,
+    bestFor: ['coding', 'creative tasks', 'general queries']
   },
   'nova-pro': {
     id: 'nova-pro',
