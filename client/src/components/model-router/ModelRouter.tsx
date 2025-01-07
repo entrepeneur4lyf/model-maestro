@@ -151,13 +151,20 @@ export function ModelRouter() {
 
   return (
     <div className="fixed inset-0 bg-background overflow-y-auto overflow-x-hidden overscroll-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4 sm:space-y-6 w-full">
-        <Card className="p-4 sm:p-6 w-full">
-          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">AI Model Router</h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] space-y-4 sm:space-y-6 w-full">
+        <Card className="p-4 sm:p-6 w-full rounded-2xl shadow-lg">
+          <h1 className="text-2xl font-bold mb-6 pt-[env(safe-area-inset-top)] leading-tight">AI Model Router</h1>
           <PromptAnalyzer onAnalysis={handleAnalysis} />
         </Card>
 
-        <Grid columns={{ default: 1, md: 2 }} gap="4">
+        <Grid 
+          columns={{ 
+            default: 1, 
+            md: 2 
+          }} 
+          gap="4"
+          className="items-start"
+        >
           <ModelPreferences
             preferences={preferences}
             onChange={setPreferences}
@@ -182,7 +189,14 @@ export function ModelRouter() {
           />
         )}
 
-        <Grid columns={{ default: 1, lg: 2 }} gap="4">
+        <Grid 
+          columns={{ 
+            default: 1, 
+            lg: 2 
+          }} 
+          gap="4"
+          className="items-start pb-[env(safe-area-inset-bottom)]"
+        >
           <HistoryTracker
             history={history}
           />

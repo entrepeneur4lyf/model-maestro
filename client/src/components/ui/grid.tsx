@@ -14,9 +14,20 @@ interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Grid = React.forwardRef<HTMLDivElement, GridProps>(
   ({ className, columns = { default: 1 }, gap = "4", children, ...props }, ref) => {
+    // Calculate dynamic gap based on screen size
+    const dynamicGap = React.useMemo(() => {
+      if (typeof window === 'undefined') return gap;
+      const width = window.innerWidth;
+      // iPhone 15 Pro specific optimizations
+      if (width >= 393 && width <= 430) {
+        return '3';
+      }
+      return gap;
+    }, [gap]);
+
     const gridClass = cn(
       "grid",
-      `gap-${gap}`,
+      `gap-${dynamicGap}`,
       columns.default && `grid-cols-${columns.default}`,
       columns.sm && `sm:grid-cols-${columns.sm}`,
       columns.md && `md:grid-cols-${columns.md}`,
@@ -26,7 +37,17 @@ const Grid = React.forwardRef<HTMLDivElement, GridProps>(
     );
 
     return (
-      <div className={gridClass} ref={ref} {...props}>
+      <div 
+        className={gridClass} 
+        ref={ref} 
+        {...props}
+        style={{
+          ...props.style,
+          // Ensure minimum touch target size of 44x44 pixels for iOS
+          '--min-touch-target': '44px',
+          gap: `var(--gap-${dynamicGap}, 1rem)`,
+        }}
+      >
         {children}
       </div>
     );
