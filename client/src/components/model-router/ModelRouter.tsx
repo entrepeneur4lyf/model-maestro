@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { PromptAnalyzer } from './PromptAnalyzer';
 import { ModelComparison } from './ModelComparison';
 import { HistoryTracker } from './HistoryTracker';
+import { ModelPreferences, type ModelPreferences as ModelPreferencesType } from './ModelPreferences';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import type { PromptAnalysis, ModelProfile, PerformanceRecord } from '@/lib/types';
@@ -13,9 +14,15 @@ import { Loader2 } from 'lucide-react';
 export function ModelRouter() {
   const [analysis, setAnalysis] = React.useState<PromptAnalysis | null>(null);
   const [selectedModel, setSelectedModel] = React.useState<ModelProfile | null>(null);
+  const [preferences, setPreferences] = React.useState<ModelPreferencesType>({
+    prioritizeSpeed: false,
+    costSensitivity: 50,
+    reliabilityThreshold: 80,
+    contextWindowImportance: 50,
+  });
+
   const { toast } = useToast();
 
-  // Fetch performance history with proper typing
   const { data: history = [], error: historyError, isLoading } = useQuery<PerformanceRecord[], Error>({
     queryKey: ['/api/performance/history'],
     enabled: true,
@@ -25,7 +32,7 @@ export function ModelRouter() {
     setAnalysis(newAnalysis);
 
     try {
-      const bestModelId = findBestModel(newAnalysis);
+      const bestModelId = findBestModel(newAnalysis, preferences);
       const model = modelProfiles[bestModelId];
 
       if (!model) {
@@ -79,11 +86,16 @@ export function ModelRouter() {
         <PromptAnalyzer onAnalysis={handleAnalysis} />
       </Card>
 
+      <ModelPreferences
+        preferences={preferences}
+        onChange={setPreferences}
+      />
+
       {selectedModel && analysis && (
         <ModelComparison
           selectedModel={selectedModel}
           alternativeModels={alternativeModels}
-          confidence={0.8} // We'll implement dynamic confidence calculation later
+          confidence={0.8}
         />
       )}
 

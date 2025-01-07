@@ -1,4 +1,5 @@
 import { ModelProfile } from './types';
+import type { ModelPreferences } from '@/components/model-router/ModelPreferences';
 
 export const modelProfiles: Record<string, ModelProfile> = {
   'claude-3-opus': {
@@ -36,27 +37,40 @@ export const modelProfiles: Record<string, ModelProfile> = {
   }
 };
 
-export function findBestModel(analysis: any) {
+export function findBestModel(analysis: any, preferences: ModelPreferences): string {
   const scores = Object.entries(modelProfiles).map(([id, profile]) => {
     let score = 0;
-    
+
     // Task type matching
     if (profile.specialties.includes(analysis.taskType)) score += 2;
-    
-    // Context window requirements
+
+    // Context window requirements with user preference
     const requiredTokens = analysis.tokens * 2; // Estimate response size
-    if (profile.contextWindow >= requiredTokens) score += 1;
-    
-    // Complexity matching
-    if (analysis.complexity > 0.7 && profile.reliabilityScore > 0.94) score += 2;
-    
+    if (profile.contextWindow >= requiredTokens) {
+      score += (preferences.contextWindowImportance / 100);
+    }
+
+    // Speed preference
+    if (preferences.prioritizeSpeed && profile.averageSpeed === 'fast') {
+      score += 2;
+    }
+
+    // Cost sensitivity
+    const costScore = (1 - profile.costPerToken / 0.015) * (preferences.costSensitivity / 100);
+    score += costScore;
+
+    // Reliability threshold
+    if (profile.reliabilityScore * 100 >= preferences.reliabilityThreshold) {
+      score += profile.reliabilityScore * (preferences.reliabilityThreshold / 100);
+    }
+
     // Special requirements matching
     const matchingSpecialties = analysis.specialRequirements
-      .filter(req => profile.specialties.includes(req)).length;
+      .filter((req: string) => profile.specialties.includes(req)).length;
     score += matchingSpecialties;
-    
+
     return { id, score };
   });
-  
+
   return scores.sort((a, b) => b.score - a.score)[0].id;
 }
