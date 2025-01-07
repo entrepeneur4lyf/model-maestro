@@ -150,9 +150,9 @@ export function ModelRouter() {
   }
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4 sm:space-y-6">
-        <Card className="p-4 sm:p-6">
+    <div className="min-h-screen bg-background overflow-x-hidden w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4 sm:space-y-6 w-full">
+        <Card className="p-4 sm:p-6 w-full max-w-full">
           <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">AI Model Router</h1>
           <PromptAnalyzer onAnalysis={handleAnalysis} />
         </Card>

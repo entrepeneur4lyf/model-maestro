@@ -14,8 +14,8 @@ function App() {
 
 function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto py-8 px-4">
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <main className="w-full max-w-full">
         <ModelRouter />
       </main>
     </div>
@@ -24,7 +24,7 @@ function Home() {
 
 function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-background">
+    <div className="min-h-screen w-full flex items-center justify-center bg-background overflow-x-hidden">
       <Card className="w-full max-w-md mx-4">
         <CardContent className="pt-6">
           <div className="flex mb-4 gap-2">

@@ -82,7 +82,10 @@ export function registerRoutes(app: Express): Server {
         response: error instanceof Error ? error.message : 'Unknown error'
       });
 
-      res.status(500).json({ message: "Failed to analyze prompt" });
+      res.status(500).json({ 
+        message: "Failed to analyze prompt",
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
