@@ -118,6 +118,7 @@ export function ModelRouter() {
             confidence={confidence}
             selectionFactors={selectionFactors}
             scoreBreakdown={scoreBreakdown}
+            preferences={preferences}
           />
         </>
       )}
