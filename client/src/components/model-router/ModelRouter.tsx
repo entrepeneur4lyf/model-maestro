@@ -5,6 +5,7 @@ import { ModelComparison } from './ModelComparison';
 import { HistoryTracker } from './HistoryTracker';
 import { AnalysisDisplay } from './AnalysisDisplay';
 import { ModelPreferences, type ModelPreferences as ModelPreferencesType } from './ModelPreferences';
+import { Grid } from '@/components/ui/grid';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import type { PromptAnalysis, ModelProfile, PerformanceRecord } from '@/lib/types';
@@ -80,7 +81,7 @@ export function ModelRouter() {
     }
   }, [preferences]);
 
-  const alternativeModels = selectedModel 
+  const alternativeModels = selectedModel
     ? Object.values(modelProfiles)
         .filter(m => m.id !== selectedModel.id)
     : [];
@@ -94,38 +95,42 @@ export function ModelRouter() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 container mx-auto px-4 py-8">
       <Card className="p-6">
         <h1 className="text-2xl font-bold mb-6">AI Model Router</h1>
         <PromptAnalyzer onAnalysis={handleAnalysis} />
       </Card>
 
-      <ModelPreferences
-        preferences={preferences}
-        onChange={setPreferences}
-      />
+      <Grid columns={{ default: 1, md: 2 }} gap="6">
+        <ModelPreferences
+          preferences={preferences}
+          onChange={setPreferences}
+        />
 
-      {selectedModel && analysis && (
-        <>
+        {selectedModel && analysis && (
           <AnalysisDisplay
             analysis={analysis}
             selectedModel={selectedModel}
           />
+        )}
+      </Grid>
 
-          <ModelComparison
-            selectedModel={selectedModel}
-            alternativeModels={alternativeModels}
-            confidence={confidence}
-            selectionFactors={selectionFactors}
-            scoreBreakdown={scoreBreakdown}
-            preferences={preferences}
-          />
-        </>
+      {selectedModel && analysis && (
+        <ModelComparison
+          selectedModel={selectedModel}
+          alternativeModels={alternativeModels}
+          confidence={confidence}
+          selectionFactors={selectionFactors}
+          scoreBreakdown={scoreBreakdown}
+          preferences={preferences}
+        />
       )}
 
-      <HistoryTracker
-        history={history}
-      />
+      <Grid columns={{ default: 1, lg: 2 }} gap="6">
+        <HistoryTracker
+          history={history}
+        />
+      </Grid>
     </div>
   );
 }
