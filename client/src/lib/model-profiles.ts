@@ -5,20 +5,63 @@ export const modelProfiles: Record<string, ModelProfile> = {
   'claude-3-opus': {
     id: 'claude-3-opus',
     name: 'Claude 3 Opus',
-    strengths: ['long-form writing', 'complex analysis', 'research'],
+    strengths: [
+      'long-form writing',
+      'complex analysis',
+      'research',
+      'code understanding',
+      'technical writing'
+    ],
     contextWindow: 200000,
-    specialties: ['academic writing', 'code analysis', 'technical writing'],
+    specialties: [
+      'academic writing',
+      'code analysis',
+      'technical documentation',
+      'scientific research',
+      'data analysis'
+    ],
     costPerToken: 0.015,
     averageSpeed: 'medium',
     reliabilityScore: 0.95,
     bestFor: ['research', 'analysis', 'long-form content']
   },
+  'gpt-4-turbo': {
+    id: 'gpt-4-turbo',
+    name: 'GPT-4 Turbo',
+    strengths: [
+      'creative writing',
+      'code generation',
+      'problem-solving',
+      'versatile tasks'
+    ],
+    contextWindow: 128000,
+    specialties: [
+      'programming',
+      'creative writing',
+      'problem-solving',
+      'general knowledge'
+    ],
+    costPerToken: 0.01,
+    averageSpeed: 'medium',
+    reliabilityScore: 0.94,
+    bestFor: ['coding', 'creative tasks', 'general queries']
+  },
   'gemini-pro': {
     id: 'gemini-pro',
     name: 'Gemini Pro',
-    strengths: ['code generation', 'technical tasks', 'mathematical analysis'],
+    strengths: [
+      'code generation',
+      'technical tasks',
+      'mathematical analysis',
+      'fast responses'
+    ],
     contextWindow: 32000,
-    specialties: ['coding', 'math', 'data analysis'],
+    specialties: [
+      'coding',
+      'math',
+      'data analysis',
+      'quick responses'
+    ],
     costPerToken: 0.012,
     averageSpeed: 'fast',
     reliabilityScore: 0.92,
@@ -27,13 +70,44 @@ export const modelProfiles: Record<string, ModelProfile> = {
   'claude-3-sonnet': {
     id: 'claude-3-sonnet',
     name: 'Claude 3 Sonnet',
-    strengths: ['balanced performance', 'concise responses'],
+    strengths: [
+      'balanced performance',
+      'concise responses',
+      'general knowledge',
+      'fast processing'
+    ],
     contextWindow: 100000,
-    specialties: ['general tasks', 'balanced performance'],
+    specialties: [
+      'general tasks',
+      'balanced performance',
+      'quick iterations',
+      'everyday queries'
+    ],
     costPerToken: 0.008,
     averageSpeed: 'fast',
     reliabilityScore: 0.93,
-    bestFor: ['general queries', 'balanced tasks']
+    bestFor: ['general queries', 'balanced tasks', 'quick responses']
+  },
+  'gpt-3.5-turbo': {
+    id: 'gpt-3.5-turbo',
+    name: 'GPT-3.5 Turbo',
+    strengths: [
+      'fast responses',
+      'general knowledge',
+      'cost-effective',
+      'basic coding'
+    ],
+    contextWindow: 16000,
+    specialties: [
+      'quick responses',
+      'basic tasks',
+      'simple coding',
+      'chat-based interactions'
+    ],
+    costPerToken: 0.002,
+    averageSpeed: 'fast',
+    reliabilityScore: 0.89,
+    bestFor: ['quick tasks', 'cost-sensitive operations', 'chat']
   }
 };
 
