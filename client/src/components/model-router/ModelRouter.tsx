@@ -63,7 +63,6 @@ export function ModelRouter() {
     }
   };
 
-  // Show error toast for history fetch errors
   React.useEffect(() => {
     if (historyError) {
       toast({
@@ -74,7 +73,6 @@ export function ModelRouter() {
     }
   }, [historyError, toast]);
 
-  // When preferences change, re-run analysis if we have one
   React.useEffect(() => {
     if (analysis) {
       handleAnalysis(analysis);
@@ -95,42 +93,44 @@ export function ModelRouter() {
   }
 
   return (
-    <div className="space-y-6 container mx-auto px-4 py-8">
-      <Card className="p-6">
-        <h1 className="text-2xl font-bold mb-6">AI Model Router</h1>
-        <PromptAnalyzer onAnalysis={handleAnalysis} />
-      </Card>
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4 sm:space-y-6">
+        <Card className="p-4 sm:p-6">
+          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">AI Model Router</h1>
+          <PromptAnalyzer onAnalysis={handleAnalysis} />
+        </Card>
 
-      <Grid columns={{ default: 1, md: 2 }} gap="6">
-        <ModelPreferences
-          preferences={preferences}
-          onChange={setPreferences}
-        />
+        <Grid columns={{ default: 1, md: 2 }} gap="4">
+          <ModelPreferences
+            preferences={preferences}
+            onChange={setPreferences}
+          />
+
+          {selectedModel && analysis && (
+            <AnalysisDisplay
+              analysis={analysis}
+              selectedModel={selectedModel}
+            />
+          )}
+        </Grid>
 
         {selectedModel && analysis && (
-          <AnalysisDisplay
-            analysis={analysis}
+          <ModelComparison
             selectedModel={selectedModel}
+            alternativeModels={alternativeModels}
+            confidence={confidence}
+            selectionFactors={selectionFactors}
+            scoreBreakdown={scoreBreakdown}
+            preferences={preferences}
           />
         )}
-      </Grid>
 
-      {selectedModel && analysis && (
-        <ModelComparison
-          selectedModel={selectedModel}
-          alternativeModels={alternativeModels}
-          confidence={confidence}
-          selectionFactors={selectionFactors}
-          scoreBreakdown={scoreBreakdown}
-          preferences={preferences}
-        />
-      )}
-
-      <Grid columns={{ default: 1, lg: 2 }} gap="6">
-        <HistoryTracker
-          history={history}
-        />
-      </Grid>
+        <Grid columns={{ default: 1, lg: 2 }} gap="4">
+          <HistoryTracker
+            history={history}
+          />
+        </Grid>
+      </div>
     </div>
   );
 }
