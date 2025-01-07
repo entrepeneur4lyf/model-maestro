@@ -7,7 +7,7 @@ import { AnalysisDisplay } from './AnalysisDisplay';
 import { ModelPreferences, type ModelPreferences as ModelPreferencesType } from './ModelPreferences';
 import { Grid } from '@/components/ui/grid';
 import { useToast } from '@/hooks/use-toast';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { PromptAnalysis, ModelProfile, PerformanceRecord } from '@/lib/types';
 import { findBestModel } from '@/lib/model-profiles';
 import { modelProfiles } from '@/lib/model-profiles';
@@ -27,14 +27,43 @@ export function ModelRouter() {
   });
 
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: history = [], error: historyError, isLoading } = useQuery<PerformanceRecord[], Error>({
     queryKey: ['/api/performance/history'],
     enabled: true,
   });
 
+  const recordPerformanceMutation = useMutation({
+    mutationFn: async (performanceData: Omit<PerformanceRecord, 'id' | 'createdAt'>) => {
+      const response = await fetch('/api/performance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(performanceData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to record performance');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/performance/history'] });
+    },
+    onError: (error) => {
+      console.error('Failed to record performance:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to record performance data',
+        variant: 'destructive',
+      });
+    },
+  });
+
   const handleAnalysis = async (newAnalysis: PromptAnalysis) => {
     setAnalysis(newAnalysis);
+    const startTime = Date.now();
 
     try {
       const { modelId, confidence: modelConfidence, factors, scoreBreakdown: breakdown } = findBestModel(newAnalysis, preferences);
@@ -49,12 +78,40 @@ export function ModelRouter() {
       setSelectionFactors(factors);
       setScoreBreakdown(breakdown);
 
+      // Record the performance
+      await recordPerformanceMutation.mutateAsync({
+        modelId: parseInt(model.id),
+        promptType: newAnalysis.taskType,
+        executionTime: Date.now() - startTime,
+        tokenCount: newAnalysis.tokens,
+        success: true,
+        prompt: JSON.stringify(newAnalysis),
+        response: JSON.stringify({
+          modelId,
+          confidence: modelConfidence,
+          factors,
+          scoreBreakdown: breakdown
+        })
+      });
+
       toast({
         title: 'Analysis Complete',
         description: `Recommended model: ${model.name} (${Math.round(modelConfidence * 100)}% confidence)`,
       });
     } catch (error) {
       console.error('Analysis error:', error);
+
+      // Record the failure
+      await recordPerformanceMutation.mutateAsync({
+        modelId: 0,
+        promptType: newAnalysis.taskType,
+        executionTime: Date.now() - startTime,
+        tokenCount: newAnalysis.tokens,
+        success: false,
+        prompt: JSON.stringify(newAnalysis),
+        response: error instanceof Error ? error.message : 'Analysis failed'
+      });
+
       toast({
         title: 'Analysis Failed',
         description: error instanceof Error ? error.message : 'Could not determine the best model',

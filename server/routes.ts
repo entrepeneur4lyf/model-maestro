@@ -19,7 +19,8 @@ export function registerRoutes(app: Express): Server {
   const httpServer = createServer(app);
 
   // Analyze prompt endpoint
-  app.post("/api/analyze", (req, res) => {
+  app.post("/api/analyze", async (req, res) => {
+    const startTime = Date.now();
     try {
       const { prompt } = req.body;
       if (!prompt) {
@@ -47,15 +48,40 @@ export function registerRoutes(app: Express): Server {
       // Detect special requirements
       const specialRequirements = detectSpecialRequirements(prompt);
 
-      res.json({
+      const analysis = {
         taskType,
         complexity,
         contextNeeded,
         tokens: tokens.length,
         specialRequirements
+      };
+
+      // Record the analysis performance
+      await db.insert(performanceRecords).values({
+        modelId: 0, // We'll update this when a model is selected
+        promptType: taskType,
+        executionTime: Date.now() - startTime,
+        tokenCount: tokens.length,
+        success: true,
+        prompt,
+        response: JSON.stringify(analysis)
       });
+
+      res.json(analysis);
     } catch (error) {
       console.error('Analysis error:', error);
+
+      // Record the failed analysis
+      await db.insert(performanceRecords).values({
+        modelId: 0,
+        promptType: 'unknown',
+        executionTime: Date.now() - startTime,
+        tokenCount: 0,
+        success: false,
+        prompt: req.body.prompt || '',
+        response: error instanceof Error ? error.message : 'Unknown error'
+      });
+
       res.status(500).json({ message: "Failed to analyze prompt" });
     }
   });
@@ -76,13 +102,15 @@ export function registerRoutes(app: Express): Server {
 
       res.json({ success: true, record });
     } catch (error) {
+      console.error('Performance recording error:', error);
       res.status(500).json({ 
-        message: "Failed to record performance" 
+        message: "Failed to record performance",
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   });
 
-  // Get performance history
+  // Get performance history with enhanced details
   app.get("/api/performance/history", async (_req, res) => {
     try {
       const records = await db.query.performanceRecords.findMany({
@@ -92,8 +120,10 @@ export function registerRoutes(app: Express): Server {
 
       res.json(records);
     } catch (error) {
+      console.error('History fetch error:', error);
       res.status(500).json({ 
-        message: "Failed to fetch performance records" 
+        message: "Failed to fetch performance records",
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   });
