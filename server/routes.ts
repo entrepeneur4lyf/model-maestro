@@ -58,7 +58,7 @@ export function registerRoutes(app: Express): Server {
 
       // Record the analysis performance
       await db.insert(performanceRecords).values({
-        modelId: 0, // We'll update this when a model is selected
+        modelId: 1, // Use the first model profile as default
         promptType: taskType,
         executionTime: Date.now() - startTime,
         tokenCount: tokens.length,
@@ -71,16 +71,16 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error('Analysis error:', error);
 
-      // Record the failed analysis
+      // Record the failed analysis with valid model_id
       await db.insert(performanceRecords).values({
-        modelId: 0,
+        modelId: 1, // Use the first model profile as default
         promptType: 'unknown',
         executionTime: Date.now() - startTime,
         tokenCount: 0,
         success: false,
         prompt: req.body.prompt || '',
         response: error instanceof Error ? error.message : 'Unknown error'
-      });
+      }).catch(err => console.error('Failed to record error:', err));
 
       res.status(500).json({ 
         message: "Failed to analyze prompt",
@@ -158,10 +158,10 @@ function detectSpecialRequirements(prompt: string): string[] {
   const requirements: string[] = [];
 
   if (/code|program|function/.test(prompt)) {
-    requirements.push('code-generation');
+    requirements.push('code generation');
   }
   if (/math|calculate|equation/.test(prompt)) {
-    requirements.push('mathematical-computation');
+    requirements.push('mathematical computation');
   }
   if (/creative|imagine|story/.test(prompt)) {
     requirements.push('creativity');
