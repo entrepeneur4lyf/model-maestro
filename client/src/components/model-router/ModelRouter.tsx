@@ -14,6 +14,8 @@ import { Loader2 } from 'lucide-react';
 export function ModelRouter() {
   const [analysis, setAnalysis] = React.useState<PromptAnalysis | null>(null);
   const [selectedModel, setSelectedModel] = React.useState<ModelProfile | null>(null);
+  const [confidence, setConfidence] = React.useState(0);
+  const [selectionFactors, setSelectionFactors] = React.useState<string[]>([]);
   const [preferences, setPreferences] = React.useState<ModelPreferencesType>({
     prioritizeSpeed: false,
     costSensitivity: 50,
@@ -32,18 +34,20 @@ export function ModelRouter() {
     setAnalysis(newAnalysis);
 
     try {
-      const bestModelId = findBestModel(newAnalysis, preferences);
-      const model = modelProfiles[bestModelId];
+      const { modelId, confidence: modelConfidence, factors } = findBestModel(newAnalysis, preferences);
+      const model = modelProfiles[modelId];
 
       if (!model) {
         throw new Error('No suitable model found');
       }
 
       setSelectedModel(model);
+      setConfidence(modelConfidence);
+      setSelectionFactors(factors);
 
       toast({
         title: 'Analysis Complete',
-        description: `Recommended model: ${model.name}`,
+        description: `Recommended model: ${model.name} (${Math.round(modelConfidence * 100)}% confidence)`,
       });
     } catch (error) {
       console.error('Analysis error:', error);
@@ -65,6 +69,13 @@ export function ModelRouter() {
       });
     }
   }, [historyError, toast]);
+
+  // When preferences change, re-run analysis if we have one
+  React.useEffect(() => {
+    if (analysis) {
+      handleAnalysis(analysis);
+    }
+  }, [preferences]);
 
   const alternativeModels = selectedModel 
     ? Object.values(modelProfiles)
@@ -95,7 +106,8 @@ export function ModelRouter() {
         <ModelComparison
           selectedModel={selectedModel}
           alternativeModels={alternativeModels}
-          confidence={0.8}
+          confidence={confidence}
+          selectionFactors={selectionFactors}
         />
       )}
 
