@@ -1,4 +1,5 @@
 export type TaskType = 'coding' | 'writing' | 'analysis' | 'general' | 'math';
+export type Provider = 'Anthropic' | 'OpenAI' | 'Google' | 'DeepSeek' | 'Other';
 
 export interface PromptAnalysis {
   taskType: TaskType;
@@ -11,6 +12,7 @@ export interface PromptAnalysis {
 export interface ModelProfile {
   id: string;
   name: string;
+  provider: Provider;
   strengths: string[];
   contextWindow: number;
   specialties: string[];
@@ -18,6 +20,12 @@ export interface ModelProfile {
   averageSpeed: 'fast' | 'medium' | 'slow';
   reliabilityScore: number;
   bestFor: string[];
+  benchmarks?: {
+    codeQuality?: number;
+    reasoning?: number;
+    creativity?: number;
+    knowledge?: number;
+  };
 }
 
 export interface PerformanceRecord {

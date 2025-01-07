@@ -2,9 +2,11 @@ import { ModelProfile } from './types';
 import type { ModelPreferences } from '@/components/model-router/ModelPreferences';
 
 export const modelProfiles: Record<string, ModelProfile> = {
+  // OpenAI Models
   'gpt-4o': {
     id: 'gpt-4o',
     name: 'GPT-4o',
+    provider: 'OpenAI',
     strengths: [
       'multimodal processing',
       'creative writing',
@@ -21,11 +23,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.0025,
     averageSpeed: 'fast',
     reliabilityScore: 0.96,
-    bestFor: ['creative tasks', 'multimodal applications', 'general problem-solving']
+    bestFor: ['creative tasks', 'multimodal applications', 'general problem-solving'],
+    benchmarks: {
+      codeQuality: 0.94,
+      reasoning: 0.96,
+      creativity: 0.95,
+      knowledge: 0.97
+    }
   },
   'gpt-4o-mini': {
     id: 'gpt-4o-mini',
     name: 'GPT-4o Mini',
+    provider: 'OpenAI',
     strengths: [
       'cost-effective',
       'low latency',
@@ -39,13 +48,20 @@ export const modelProfiles: Record<string, ModelProfile> = {
       'applications requiring quick responses'
     ],
     costPerToken: 0.00015,
-    averageSpeed: 'fast', 
+    averageSpeed: 'fast',
     reliabilityScore: 0.94,
-    bestFor: ['real-time applications', 'cost-sensitive tasks', 'customer interactions']
+    bestFor: ['real-time applications', 'cost-sensitive tasks', 'customer interactions'],
+    benchmarks: {
+      codeQuality: 0.89,
+      reasoning: 0.91,
+      creativity: 0.90,
+      knowledge: 0.92
+    }
   },
   'gpt-o1': {
     id: 'gpt-o1',
     name: 'GPT-o1',
+    provider: 'OpenAI',
     strengths: [
       'complex reasoning',
       'problem-solving',
@@ -60,13 +76,22 @@ export const modelProfiles: Record<string, ModelProfile> = {
       'strategic planning'
     ],
     costPerToken: 0.003,
-    averageSpeed: 'medium', 
+    averageSpeed: 'medium',
     reliabilityScore: 0.98,
-    bestFor: ['complex problem-solving', 'scientific and technical tasks', 'strategic analysis']
+    bestFor: ['complex problem-solving', 'scientific and technical tasks', 'strategic analysis'],
+    benchmarks: {
+      codeQuality: 0.97,
+      reasoning: 0.98,
+      creativity: 0.93,
+      knowledge: 0.96
+    }
   },
+
+  // Anthropic Models
   'claude-3-5-sonnet': {
     id: 'claude-3-5-sonnet',
     name: 'Claude 3.5 Sonnet',
+    provider: 'Anthropic',
     strengths: [
       'advanced coding',
       'complex reasoning',
@@ -83,11 +108,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.003,
     averageSpeed: 'fast',
     reliabilityScore: 0.97,
-    bestFor: ['coding tasks', 'complex problem-solving', 'multilingual applications']
+    bestFor: ['coding tasks', 'complex problem-solving', 'multilingual applications'],
+    benchmarks: {
+      codeQuality: 0.96,
+      reasoning: 0.97,
+      creativity: 0.94,
+      knowledge: 0.95
+    }
   },
   'claude-3-opus': {
     id: 'claude-3-opus',
     name: 'Claude 3 Opus',
+    provider: 'Anthropic',
     strengths: [
       'long-form writing',
       'complex analysis',
@@ -106,11 +138,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.015,
     averageSpeed: 'medium',
     reliabilityScore: 0.95,
-    bestFor: ['research', 'analysis', 'long-form content']
+    bestFor: ['research', 'analysis', 'long-form content'],
+    benchmarks: {
+      codeQuality: 0.95,
+      reasoning: 0.98,
+      creativity: 0.94,
+      knowledge: 0.97
+    }
   },
   'claude-3-sonnet': {
     id: 'claude-3-sonnet',
     name: 'Claude 3 Sonnet',
+    provider: 'Anthropic',
     strengths: [
       'balanced performance',
       'concise responses',
@@ -127,11 +166,20 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.008,
     averageSpeed: 'fast',
     reliabilityScore: 0.93,
-    bestFor: ['general queries', 'balanced tasks', 'quick responses']
+    bestFor: ['general queries', 'balanced tasks', 'quick responses'],
+    benchmarks: {
+      codeQuality: 0.92,
+      reasoning: 0.93,
+      creativity: 0.91,
+      knowledge: 0.94
+    }
   },
+
+  // DeepSeek Models
   'deepseek-coder-33b': {
     id: 'deepseek-coder-33b',
     name: 'DeepSeek-Coder-Base-33B',
+    provider: 'DeepSeek',
     strengths: [
       'advanced code generation',
       'multilingual programming support',
@@ -149,11 +197,20 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.010,
     averageSpeed: 'fast',
     reliabilityScore: 0.96,
-    bestFor: ['advanced coding tasks', 'multilingual programming', 'code optimization']
+    bestFor: ['advanced coding tasks', 'multilingual programming', 'code optimization'],
+    benchmarks: {
+      codeQuality: 0.98,
+      reasoning: 0.94,
+      creativity: 0.88,
+      knowledge: 0.92
+    }
   },
+
+  // Other Models
   'gpt-4-turbo': {
     id: 'gpt-4-turbo',
     name: 'GPT-4 Turbo',
+    provider: 'OpenAI',
     strengths: [
       'creative writing',
       'code generation',
@@ -170,11 +227,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.01,
     averageSpeed: 'medium',
     reliabilityScore: 0.94,
-    bestFor: ['coding', 'creative tasks', 'general queries']
+    bestFor: ['coding', 'creative tasks', 'general queries'],
+    benchmarks: {
+        codeQuality: 0.95,
+        reasoning: 0.94,
+        creativity: 0.96,
+        knowledge: 0.95
+    }
   },
   'nova-pro': {
     id: 'nova-pro',
     name: 'Nova Pro',
+    provider: 'Other',
     strengths: [
       'multimodal processing',
       'complex reasoning',
@@ -191,11 +255,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.013,
     averageSpeed: 'medium',
     reliabilityScore: 0.91,
-    bestFor: ['AWS deployments', 'complex tasks', 'data-driven applications']
+    bestFor: ['AWS deployments', 'complex tasks', 'data-driven applications'],
+    benchmarks: {
+      codeQuality: 0.90,
+      reasoning: 0.92,
+      creativity: 0.89,
+      knowledge: 0.91
+    }
   },
   'phi': {
     id: 'phi',
     name: 'Phi',
+    provider: 'Other',
     strengths: [
       'efficiency',
       'integration',
@@ -212,11 +283,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.007,
     averageSpeed: 'fast',
     reliabilityScore: 0.89,
-    bestFor: ['Microsoft integrations', 'chatbots', 'summarization']
+    bestFor: ['Microsoft integrations', 'chatbots', 'summarization'],
+    benchmarks: {
+        codeQuality: 0.85,
+        reasoning: 0.88,
+        creativity: 0.90,
+        knowledge: 0.91
+    }
   },
   'gemini-pro': {
     id: 'gemini-pro',
     name: 'Gemini Pro',
+    provider: 'Google',
     strengths: [
       'code generation',
       'technical tasks',
@@ -233,11 +311,18 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.012,
     averageSpeed: 'fast',
     reliabilityScore: 0.92,
-    bestFor: ['coding', 'quick responses', 'technical tasks']
+    bestFor: ['coding', 'quick responses', 'technical tasks'],
+    benchmarks: {
+        codeQuality: 0.93,
+        reasoning: 0.92,
+        creativity: 0.90,
+        knowledge: 0.93
+    }
   },
   'gpt-3.5-turbo': {
     id: 'gpt-3.5-turbo',
     name: 'GPT-3.5 Turbo',
+    provider: 'OpenAI',
     strengths: [
       'fast responses',
       'general knowledge',
@@ -254,7 +339,13 @@ export const modelProfiles: Record<string, ModelProfile> = {
     costPerToken: 0.002,
     averageSpeed: 'fast',
     reliabilityScore: 0.89,
-    bestFor: ['quick tasks', 'cost-sensitive operations', 'chat']
+    bestFor: ['quick tasks', 'cost-sensitive operations', 'chat'],
+    benchmarks: {
+        codeQuality: 0.88,
+        reasoning: 0.89,
+        creativity: 0.87,
+        knowledge: 0.90
+    }
   }
 };
 
@@ -273,9 +364,9 @@ interface ModelScore {
   };
 }
 
-export function findBestModel(analysis: any, preferences: ModelPreferences): { 
-  modelId: string; 
-  confidence: number; 
+export function findBestModel(analysis: any, preferences: ModelPreferences): {
+  modelId: string;
+  confidence: number;
   factors: string[];
   scoreBreakdown: ModelScore['breakdown'];
 } {
@@ -350,12 +441,12 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): {
       }
     });
 
-    return { 
-      id, 
-      score, 
+    return {
+      id,
+      score,
       factors,
       breakdown,
-      confidence: 0 
+      confidence: 0
     };
   });
 
@@ -365,8 +456,8 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): {
   const scoreRange = maxScore - minScore;
 
   scores.forEach(score => {
-    score.confidence = scoreRange > 0 
-      ? (score.score - minScore) / scoreRange 
+    score.confidence = scoreRange > 0
+      ? (score.score - minScore) / scoreRange
       : 1;
   });
 
