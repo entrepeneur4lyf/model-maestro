@@ -20,18 +20,6 @@ export interface ModelProfile {
   bestFor: string[];
 }
 
-export interface ModelRecommendation {
-  modelId: string;
-  confidence: number;
-  reasons: string[];
-}
-
-export interface PerformanceMetrics {
-  averageExecutionTime: number;
-  successRate: number;
-  averageRating: number;
-}
-
 export interface PerformanceRecord {
   id: number;
   modelId: number;
@@ -43,4 +31,25 @@ export interface PerformanceRecord {
   createdAt: Date;
   prompt: string;
   response: string;
+}
+
+export interface ModelRecommendation {
+  modelId: string;
+  confidence: number;
+  reasons: string[];
+}
+
+export interface PromptFeatures {
+  semanticCategory: string[];
+  technicalComplexity: number;
+  domainSpecificTerms: string[];
+  expectedOutputType: 'code' | 'text' | 'analysis' | 'creative';
+}
+
+export interface AnalysisResult {
+  features: PromptFeatures;
+  confidence: number;
+  recommendedModel: string;
+  alternativeModels: string[];
+  reasoning: string[];
 }
