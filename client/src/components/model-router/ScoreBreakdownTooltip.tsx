@@ -12,6 +12,7 @@ interface ScoreComponent {
   label: string;
   score: number;
   description: string;
+  color?: string;
 }
 
 interface Props {
@@ -27,6 +28,7 @@ interface Props {
     prioritizeSpeed: boolean;
     costSensitivity: number;
     reliabilityThreshold: number;
+    contextWindowImportance: number;
   };
 }
 
@@ -35,48 +37,60 @@ export function ScoreBreakdownTooltip({ breakdown, preferences }: Props) {
     {
       label: 'Task Match',
       score: breakdown.taskMatch,
-      description: 'Points for matching the task type'
+      description: 'Points for matching the task type',
+      color: 'bg-blue-500'
     },
     {
       label: 'Context Score',
       score: breakdown.contextScore,
-      description: 'Based on context window requirements'
+      description: `Based on context window requirements (${(preferences.contextWindowImportance || 0).toFixed(0)}% importance)`,
+      color: 'bg-green-500'
     },
     {
       label: 'Speed Bonus',
       score: breakdown.speedBonus,
-      description: preferences.prioritizeSpeed ? 'Speed priority is active (+2)' : 'Speed priority is inactive'
+      description: preferences.prioritizeSpeed ? 'Speed priority is active (+2 points)' : 'Speed priority is inactive',
+      color: 'bg-yellow-500'
     },
     {
       label: 'Cost Score',
       score: breakdown.costScore,
-      description: `Cost sensitivity at ${preferences.costSensitivity}%`
+      description: `Cost sensitivity set to ${preferences.costSensitivity}%`,
+      color: 'bg-purple-500'
     },
     {
       label: 'Reliability',
       score: breakdown.reliabilityScore,
-      description: `Minimum reliability: ${preferences.reliabilityThreshold}%`
+      description: `Minimum reliability threshold: ${preferences.reliabilityThreshold}%`,
+      color: 'bg-red-500'
     },
     {
       label: 'Special Match',
       score: breakdown.specialtyMatch,
-      description: 'Points for matching special requirements'
+      description: 'Points for matching special requirements',
+      color: 'bg-orange-500'
     }
   ];
 
+  const totalScore = Object.values(breakdown).reduce((a, b) => a + b, 0);
+
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger className="inline-flex items-center text-muted-foreground hover:text-foreground">
+      <Tooltip>
+        <TooltipTrigger className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors">
           <Info className="h-4 w-4" />
           <span className="ml-1 text-sm">Score Details</span>
         </TooltipTrigger>
-        <TooltipContent className="w-80 p-0" align="start">
+        <TooltipContent 
+          className="w-80 p-0" 
+          align="start"
+          sideOffset={5}
+        >
           <div className="p-4 space-y-3">
             <h4 className="font-medium">Score Breakdown</h4>
             <div className="space-y-2">
-              <AnimatePresence mode="wait">
-                {components.map(({ label, score, description }) => (
+              <AnimatePresence initial={false}>
+                {components.map(({ label, score, description, color }) => (
                   score > 0 && (
                     <motion.div
                       key={label}
@@ -88,14 +102,21 @@ export function ScoreBreakdownTooltip({ breakdown, preferences }: Props) {
                     >
                       <div className="flex justify-between text-sm">
                         <span>{label}</span>
-                        <span>+{score.toFixed(1)}</span>
+                        <motion.span
+                          key={score}
+                          initial={{ scale: 1.2, color: '#10B981' }}
+                          animate={{ scale: 1, color: '#6B7280' }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          +{score.toFixed(1)}
+                        </motion.span>
                       </div>
                       <div className="relative h-1.5 bg-secondary rounded-full overflow-hidden">
                         <motion.div
-                          className="absolute inset-y-0 left-0 bg-primary rounded-full"
+                          className={`absolute inset-y-0 left-0 ${color || 'bg-primary'} rounded-full`}
                           initial={{ width: 0 }}
-                          animate={{ width: `${(score / 2) * 100}%` }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
+                          animate={{ width: `${Math.max(0, Math.min(100, (score / totalScore) * 100))}%` }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">{description}</p>
@@ -106,9 +127,14 @@ export function ScoreBreakdownTooltip({ breakdown, preferences }: Props) {
               <div className="border-t mt-2 pt-2">
                 <div className="flex justify-between font-medium">
                   <span>Total Score</span>
-                  <span>
-                    {Object.values(breakdown).reduce((a, b) => a + b, 0).toFixed(1)}
-                  </span>
+                  <motion.span
+                    key={totalScore}
+                    initial={{ scale: 1.2, color: '#10B981' }}
+                    animate={{ scale: 1, color: '#000000' }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {totalScore.toFixed(1)}
+                  </motion.span>
                 </div>
               </div>
             </div>
