@@ -30,11 +30,11 @@ export function HistoryTracker({ history }: Props) {
                 return (
                   <div
                     key={entry.id}
-                    className="flex items-center justify-between p-4 rounded-lg bg-secondary/5"
+                    className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between p-4 rounded-lg bg-secondary/5"
                   >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">Analysis Request</span>
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-medium truncate">Analysis Request</span>
                         <Badge variant={entry.success ? "outline" : "destructive"}>
                           {entry.success ? "Success" : "Failed"}
                         </Badge>
@@ -43,7 +43,7 @@ export function HistoryTracker({ history }: Props) {
                         {entry.promptType} - {entry.executionTime}ms
                       </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-muted-foreground shrink-0">
                       {new Date(entry.createdAt).toLocaleDateString()}
                     </div>
                   </div>
@@ -54,11 +54,11 @@ export function HistoryTracker({ history }: Props) {
               return (
                 <div
                   key={entry.id}
-                  className="flex items-center justify-between p-4 rounded-lg bg-secondary/5"
+                  className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between p-4 rounded-lg bg-secondary/5"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium truncate max-w-[200px] sm:max-w-[300px]">
                         {model ? model.name : `Model ${entry.modelId}`}
                       </span>
                       <Badge variant={entry.success ? "outline" : "destructive"}>
@@ -69,7 +69,7 @@ export function HistoryTracker({ history }: Props) {
                       {entry.promptType} - {entry.executionTime}ms
                     </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground shrink-0">
                     {new Date(entry.createdAt).toLocaleDateString()}
                   </div>
                 </div>
