@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { analyzePrompt } from '@/lib/analyze-prompt';
 import type { PromptAnalysis } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface Props {
   onAnalysis: (analysis: PromptAnalysis) => void;
@@ -13,14 +14,27 @@ interface Props {
 export function PromptAnalyzer({ onAnalysis }: Props) {
   const [prompt, setPrompt] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const { toast } = useToast();
 
   const handleAnalyze = async () => {
     setLoading(true);
     try {
+      console.log('Analyzing prompt:', prompt);
       const analysis = await analyzePrompt(prompt);
+      console.log('Analysis result:', analysis);
+
       onAnalysis(analysis);
+      toast({
+        title: 'Analysis Complete',
+        description: `Task type: ${analysis.taskType}, Complexity: ${Math.round(analysis.complexity * 100)}%`,
+      });
     } catch (error) {
       console.error('Analysis failed:', error);
+      toast({
+        title: 'Analysis Failed',
+        description: error instanceof Error ? error.message : 'Failed to analyze prompt',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -29,7 +43,7 @@ export function PromptAnalyzer({ onAnalysis }: Props) {
   return (
     <div className="space-y-4">
       <Textarea
-        placeholder="Enter your prompt here..."
+        placeholder="Enter your prompt here (e.g., 'Write a function to sort an array' or 'Analyze this dataset')"
         className="min-h-[150px] resize-none"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
