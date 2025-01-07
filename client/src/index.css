@@ -7,7 +7,30 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    touch-action: pan-y pinch-zoom;
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    width: 100%;
+    position: fixed;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #root {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    width: 100%;
+    overflow-x: hidden;
   }
 }
