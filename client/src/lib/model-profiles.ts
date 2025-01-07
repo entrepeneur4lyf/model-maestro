@@ -45,6 +45,8 @@ interface ModelScore {
 }
 
 export function findBestModel(analysis: any, preferences: ModelPreferences): { modelId: string; confidence: number; factors: string[] } {
+  console.log('Running model selection with preferences:', preferences);
+
   const scores: ModelScore[] = Object.entries(modelProfiles).map(([id, profile]) => {
     let score = 0;
     const factors: string[] = [];
@@ -91,6 +93,14 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): { m
       factors.push(`Matches ${matchingSpecialties} special requirements`);
     }
 
+    console.log(`Model ${profile.name} score breakdown:`, {
+      totalScore: score,
+      factors,
+      speedBonus: preferences.prioritizeSpeed && profile.averageSpeed === 'fast' ? 2 : 0,
+      costScore: costScore,
+      specialtyMatch: matchingSpecialties
+    });
+
     // Calculate confidence based on total possible score
     const maxPossibleScore = 7; 
     const confidence = Math.min(score / maxPossibleScore, 1);
@@ -99,6 +109,8 @@ export function findBestModel(analysis: any, preferences: ModelPreferences): { m
   });
 
   const bestModel = scores.sort((a, b) => b.score - a.score)[0];
+  console.log('Selected model:', modelProfiles[bestModel.id].name, 'with confidence:', bestModel.confidence);
+
   return {
     modelId: bestModel.id,
     confidence: bestModel.confidence,
