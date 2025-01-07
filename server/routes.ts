@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { db } from "@db";
-import { performanceRecords } from "@db/schema";
+import { performanceRecords, modelProfiles } from "@db/schema";
 import { eq } from "drizzle-orm";
 import natural from 'natural';
 
@@ -17,6 +17,23 @@ const TASK_KEYWORDS = {
 
 export function registerRoutes(app: Express): Server {
   const httpServer = createServer(app);
+
+  // Get all model profiles
+  app.get("/api/model-profiles", async (_req, res) => {
+    try {
+      const profiles = await db.query.modelProfiles.findMany({
+        orderBy: (profiles, { asc }) => [asc(profiles.id)],
+      });
+
+      res.json(profiles);
+    } catch (error) {
+      console.error('Profile fetch error:', error);
+      res.status(500).json({ 
+        message: "Failed to fetch model profiles",
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
 
   // Analyze prompt endpoint
   app.post("/api/analyze", async (req, res) => {
