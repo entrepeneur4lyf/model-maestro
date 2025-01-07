@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { PromptAnalyzer } from './PromptAnalyzer';
 import { ModelComparison } from './ModelComparison';
 import { HistoryTracker } from './HistoryTracker';
+import { AnalysisDisplay } from './AnalysisDisplay';
 import { ModelPreferences, type ModelPreferences as ModelPreferencesType } from './ModelPreferences';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -103,12 +104,19 @@ export function ModelRouter() {
       />
 
       {selectedModel && analysis && (
-        <ModelComparison
-          selectedModel={selectedModel}
-          alternativeModels={alternativeModels}
-          confidence={confidence}
-          selectionFactors={selectionFactors}
-        />
+        <>
+          <AnalysisDisplay
+            analysis={analysis}
+            selectedModel={selectedModel}
+          />
+
+          <ModelComparison
+            selectedModel={selectedModel}
+            alternativeModels={alternativeModels}
+            confidence={confidence}
+            selectionFactors={selectionFactors}
+          />
+        </>
       )}
 
       <HistoryTracker
